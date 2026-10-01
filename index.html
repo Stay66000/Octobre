@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raccordements</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+  :root {
+    --bg: #020617;
+    --surface: rgba(10, 16, 31, 0.85);
+    --surface-alt: rgba(15, 23, 42, 0.9);
+    --border: rgba(30, 58, 110, 0.4);
+    --ink: #F8FAFC;
+    --ink-muted: #64748B;
+    --accent: rgba(12, 28, 68, 0.9);
+    --accent-light: #1E40AF;
+    --accent-text: #60A5FA;
+    --success: #22C55E;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --danger: #EF4444;
+    --danger-bg: rgba(239, 68, 68, 0.15);
+    --radius: 8px;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.4;
+    padding-bottom: 70px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent-text);
+  }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  main { padding: 12px; max-width: 900px; margin: 0 auto; }
+  section.view { display: none; }
+  section.view.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    color: var(--accent-text);
+    margin-bottom: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .field input[type="text"],
+  .field input[type="number"],
+  .field input[type="date"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface-alt);
+    color: var(--ink);
+    outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--accent-text);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+
+  .seg { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .seg button {
+    flex: 1;
+    border: none;
+    background: var(--surface-alt);
+    color: var(--ink-muted);
+    padding: 10px 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    border-right: 1px solid var(--border);
+  }
+  .seg button:last-child { border-right: none; }
+  .seg button.selected {
+    background: var(--accent);
+    color: #FFF;
+  }
+  .seg button.selected.ok { background: var(--success-bg); color: var(--success); }
+  .seg button.selected.bad { background: var(--danger-bg); color: var(--danger); }
+
+  .preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    margin: 12px 0;
+  }
+  .preview .amount { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--accent-text); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent-light);
+    color: #FFF;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-primary:active { opacity: 0.85; }
+  .btn-ghost {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink-muted);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .date-pill {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-text);
+  }
+  .month-total-pill {
+    background: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--accent-text);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  table.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  table.custom-table th {
+    background: var(--surface-alt);
+    color: var(--accent-text);
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  table.custom-table td {
+    padding: 14px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.custom-table tr:last-child td { border-bottom: none; }
+  table.custom-table tr:hover { background: rgba(255, 255, 255, 0.05); cursor: pointer; }
+
+  .badge-statut { font-size: 14px; }
+  .badge-typo {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .badge-op {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60A5FA;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .tarif-val {
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 12px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+  }
+  .modal-title { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--accent-text); }
+
+  nav.tabbar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 20;
+  }
+  .tabbar button {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 8px 4px;
+    background: none; border: none; color: var(--ink-muted);
+    cursor: pointer; font-size: 10px; font-weight: 600;
+  }
+  .tabbar button.active { color: var(--accent-text); }
+  .tabbar svg { width: 18px; height: 18px; }
+
+  .toast {
+    position: fixed;
+    bottom: 60px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent-light); color: #FFF;
+    padding: 8px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+    opacity: 0; pointer-events: none;
+    transition: all 0.2s ease; z-index: 1000;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  header.top, nav.tabbar { background: #0A101F; }
+  .field input, .field select, .field textarea { font-size: 16px; }
+  .btn-ghost { min-height: 34px; }
+  .sync { font-size: 11px; color: var(--ink-muted); font-family: var(--font-mono); margin-right: 8px; }
+  .split { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); margin-bottom: 10px; }
+  .dh { display: flex; justify-content: space-between; padding: 12px 4px 6px; font-family: var(--font-mono); font-size: 12px; color: var(--accent-text); }
+  .rw { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; cursor: pointer; }
+  .r1 { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+  .r2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; font-size: 12px; color: var(--ink-muted); }
+  .r2 .ad { flex: 1 1 140px; word-break: break-word; }
+  .r2 a { text-decoration: none; font-size: 16px; padding: 4px; }
+  .x { color: var(--danger); border-color: var(--danger); padding: 6px 10px; margin-left: auto; }
+  .fr { display: flex; justify-content: space-between; align-items: center; background: var(--surface-alt); }
+  .fa { display: flex; align-items: center; gap: 8px; }
+  .empty { color: var(--ink-muted); text-align: center; padding: 20px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">Raccordements</div>
+  <div class="header-actions">
+    <span class="sync" id="syncState"></span><button class="btn-ghost" id="reloadBtn">🔄 Synchro</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="view active" id="view-saisie">
+    <div class="card">
+      <div class="field">
+        <label for="f-date">Date</label>
+        <input type="date" id="f-date">
+      </div>
+      <div class="field">
+        <label>Opérateur</label>
+        <div class="seg" id="f-op">
+          <button data-val="Orange" class="selected">Orange</button>
+          <button data-val="SFR">SFR</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-num">N° intervention / Réf</label>
+        <input type="text" inputmode="numeric" autocomplete="off" id="f-num" placeholder="Ex : 0468934875 (10 chiffres obligatoires)">
+      </div>
+      <div class="field">
+        <label for="f-typo">Typologie raccordement</label>
+        <select id="f-typo">
+          <option value="">-- Sélectionner une typologie --</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-addr">Adresse client</label>
+        <input type="text" id="f-addr" placeholder="12 rue de la Paix, Perpignan">
+      </div>
+      <div class="field">
+        <label>Résultat</label>
+        <div class="seg" id="f-statut">
+          <button data-val="Réussite" class="ok selected">👍 Succès</button>
+          <button data-val="Échec" class="bad">❌ Échec</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Mode de travail</label>
+        <div class="seg" id="f-solo">
+          <button data-val="Solo" class="selected">Solo</button>
+          <button data-val="Binôme">Binôme</button>
+        </div>
+      </div>
+
+      <div class="field" id="wrap-tech-solo" style="display:block;">
+        <label for="f-tech-solo">Technicien en Solo</label>
+        <select id="f-tech-solo">
+          <option value="Brendan">Brendan</option>
+          <option value="Hamlili">Hamlili</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="f-comment">Commentaire</label>
+        <input type="text" id="f-comment" placeholder="Remarques, détails...">
+      </div>
+
+      <!-- CASE A COCHER APIE -->
+      <div class="field" style="display:flex; align-items:center; gap:8px; margin-top: -4px;">
+        <input type="checkbox" id="f-apie" style="width:18px; height:18px; cursor:pointer;">
+        <label for="f-apie" style="margin-bottom:0; cursor:pointer; text-transform:none; font-size:12px; font-weight:600;">Option APIE (+37,60 €)</label>
+      </div>
+
+      <div class="preview">
+        <span style="font-size:12px; color:var(--ink-muted);">Montant estimé</span>
+        <span class="amount" id="f-preview">0,00 €</span>
+      </div>
+
+      <button class="btn-primary" id="f-save">Enregistrer l'intervention</button>
+
+      <!-- TOTAL JOURNALIER -->
+      <div class="card" id="dailyTotalCard" style="margin-top:14px; margin-bottom:0; padding:12px; background:var(--surface-alt); text-align:center; border:1px solid var(--border);">
+        <div style="font-size:11px; color:var(--accent-text); text-transform:uppercase; font-weight:600; margin-bottom:4px;">
+          Total journalier (<span id="dailyTotalDate">--/--/----</span>)
+        </div>
+        <div id="dailyTotalAmount" style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--success);">
+          0,00 €
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-carburant">
+    <div class="card">
+      <div class="field">
+        <label for="fuel-date">Date du plein</label>
+        <input type="date" id="fuel-date">
+      </div>
+      <div class="field">
+        <label for="fuel-amount">Montant Carburant (€)</label>
+        <input type="number" step="0.01" id="fuel-amount" placeholder="60.00">
+      </div>
+      
+      <div class="field">
+        <label>Qui a mis le carburant ?</label>
+        <div class="seg" id="fuel-tech">
+          <button data-val="Brendan" class="selected">Brendan</button>
+          <button data-val="Hamlili">Hamlili</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="fuel-comment">Station / Commentaire</label>
+        <input type="text" id="fuel-comment" placeholder="Station Total Perpignan">
+      </div>
+      <button class="btn-primary" id="fuel-save">Enregistrer le plein</button>
+    </div>
+
+    <div class="filter-bar">
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn-ghost" id="prevMonthFuel">‹</button>
+        <div class="date-pill" id="fuelMonthLabel">Mois</div>
+        <button class="btn-ghost" id="nextMonthFuel">›</button>
+      </div>
+      <div class="month-total-pill" id="fuelMonthTotal">Total Mois : 0,00 €</div>
+    </div>
+
+    <!-- 2 COLONNES DISTINCTES DE CARBURANT -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 12px;">
+      
+      <!-- COLONNE BRENDAN -->
+      <div class="card" style="margin-bottom: 0;">
+        <div style="font-weight: 700; font-size: 14px; color: var(--accent-text); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px;">
+          ⛽ Brendan
+        </div>
+        <div id="fuelListBrendan"></div>
+        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border); font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+          <span>Total Brendan :</span>
+          <span id="fuelTotalBrendan" style="font-family: var(--font-mono); color: var(--danger); font-size: 15px;">0,00 €</span>
+        </div>
+      </div>
+
+      <!-- COLONNE HAMLILI -->
+      <div class="card" style="margin-bottom: 0;">
+        <div style="font-weight: 700; font-size: 14px; color: var(--accent-text); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px;">
+          ⛽ Hamlili
+        </div>
+        <div id="fuelListHamlili"></div>
+        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border); font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+          <span>Total Hamlili :</span>
+          <span id="fuelTotalHamlili" style="font-family: var(--font-mono); color: var(--danger); font-size: 15px;">0,00 €</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RÉCAPITULATIF EN BAS DE PAGE -->
+    <div class="card" style="background: var(--surface-alt); text-align: center; padding: 12px;">
+      <div style="font-weight: 700; font-size: 13px; color: var(--accent-text); margin-bottom: 6px;">
+        Récapitulatif Carburant (<span id="fuelRecapMonth">Mois</span>)
+      </div>
+      <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; font-size: 13px;">
+        <div>Brendan : <strong id="recapFuelBrendan" style="font-family: var(--font-mono); color: var(--danger);">0,00 €</strong></div>
+        <div>Hamlili : <strong id="recapFuelHamlili" style="font-family: var(--font-mono); color: var(--danger);">0,00 €</strong></div>
+        <div>Total Général : <strong id="recapFuelTotal" style="font-family: var(--font-mono); color: var(--accent-text);">0,00 €</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-historique">
+    <div class="field" style="margin-bottom:10px;">
+      <label>Technicien sélectionné :</label>
+      <div class="seg" id="hist-tech-select">
+        <button data-val="Brendan" class="selected">Brendan</button>
+        <button data-val="Hamlili">Hamlili</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn-ghost" id="prevMonth">‹</button>
+        <div class="date-pill" id="monthLabel">Mois</div>
+        <button class="btn-ghost" id="nextMonth">›</button>
+      </div>
+      <div class="month-total-pill" id="totalGlobalBadge">Total : 0,00 €</div>
+    </div>
+
+    <!-- CARTE DE TAUX DE RÉUSSITE -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-bottom: 12px;">
+      <!-- Stats Mois -->
+      <div class="card" style="margin-bottom:0; padding:12px; background:var(--surface-alt);">
+        <div style="font-weight:700; font-size:13px; color:var(--accent-text); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px;">
+          <span>📅 Taux de réussite (Mois)</span>
+          <span id="stat-month-pct-badge" class="badge-typo" style="background:var(--success-bg); color:var(--success); font-family:var(--font-mono); font-size:12px; font-weight:700;">0%</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--ink-muted);">Tout opérateur :</span>
+            <strong id="stat-month-global" style="font-family:var(--font-mono); color:var(--ink);">0/0 dossier réussi (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#FF7900; font-weight:600;">Orange 🍊 :</span>
+            <strong id="stat-month-orange" style="font-family:var(--font-mono); color:#FF7900;">0/0 (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#EF4444; font-weight:600;">SFR 🔴 :</span>
+            <strong id="stat-month-sfr" style="font-family:var(--font-mono); color:#EF4444;">0/0 (0%)</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Semaine en cours -->
+      <div class="card" style="margin-bottom:0; padding:12px; background:var(--surface-alt);">
+        <div style="font-weight:700; font-size:13px; color:var(--accent-text); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px;">
+          <span>⚡ Taux de réussite (Semaine)</span>
+          <span id="stat-week-pct-badge" class="badge-typo" style="background:var(--success-bg); color:var(--success); font-family:var(--font-mono); font-size:12px; font-weight:700;">0%</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:var(--ink-muted);">Tout opérateur :</span>
+            <strong id="stat-week-global" style="font-family:var(--font-mono); color:var(--ink);">0/0 dossier réussi (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#FF7900; font-weight:600;">Orange 🍊 :</span>
+            <strong id="stat-week-orange" style="font-family:var(--font-mono); color:#FF7900;">0/0 (0%)</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:#EF4444; font-weight:600;">SFR 🔴 :</span>
+            <strong id="stat-week-sfr" style="font-family:var(--font-mono); color:#EF4444;">0/0 (0%)</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split" id="splitTotals"></div>
+
+    <div class="field" style="margin-bottom:10px;">
+      <input type="text" id="histSearch" placeholder="🔍 Rechercher Réf, Typologie, Adresse...">
+    </div>
+
+    <div id="histList"></div>
+
+    <button class="btn-primary" id="exportXlsx" style="margin-top:12px; font-size:12px;">📊 Exporter en Excel (.xlsx)</button>
+  </section>
+
+  <section class="view" id="view-tarifs">
+    <div class="card">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border); text-align:left; color:var(--accent-text);">
+            <th style="padding:8px;">Typologie</th>
+            <th style="padding:8px; color:#FF7900;">Orange</th>
+            <th style="padding:8px; color:#EF4444;">SFR</th>
+          </tr>
+        </thead>
+        <tbody id="tariffRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODALE D'ÉDITION -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Modifier l'intervention</div>
+      <button class="btn-ghost" id="closeModal">✕ Fermer</button>
+    </div>
+    <div class="field">
+      <label for="m-date">Date :</label>
+      <input type="date" id="m-date">
+    </div>
+    <div class="field">
+      <label for="m-num">N° Ref :</label>
+      <input type="text" id="m-num">
+    </div>
+    <div class="field">
+      <label for="m-addr">Adresse client :</label>
+      <input type="text" id="m-addr" placeholder="Adresse client">
+    </div>
+    <div class="field">
+      <label>Opérateur :</label>
+      <div class="seg" id="m-op-seg">
+        <button data-val="Orange">Orange</button>
+        <button data-val="SFR">SFR</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="m-typo">Typologie :</label>
+      <select id="m-typo"></select>
+    </div>
+    <div class="field">
+      <label>Résultat :</label>
+      <div class="seg" id="m-statut-seg">
+        <button data-val="Réussite" class="ok">👍 Succès</button>
+        <button data-val="Échec" class="bad">❌ Échec</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="m-tech-solo">Technicien :</label>
+      <select id="m-tech-solo">
+        <option value="Brendan">Brendan</option>
+        <option value="Hamlili">Hamlili</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="m-comment">Commentaires :</label>
+      <textarea id="m-comment" rows="2"></textarea>
+    </div>
+    <div class="field" style="display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="m-apie" style="width:18px; height:18px; cursor:pointer;">
+      <label for="m-apie" style="margin-bottom:0; cursor:pointer; font-weight:600; text-transform:none; font-size:12px;">Option APIE (+37,60 €)</label>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:14px;">
+      <button class="btn-primary" id="m-save-btn">Mettre à jour</button>
+      <button class="btn-ghost" id="m-del-btn" style="color:var(--danger); border-color:var(--danger);">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fuelModal"><div class="modal-card">
+  <div class="modal-header"><div class="modal-title">Modifier le plein</div><button class="btn-ghost" id="fm-close">✕ Fermer</button></div>
+  <div class="field"><label for="fm-date">Date :</label><input type="date" id="fm-date"></div>
+  <div class="field"><label for="fm-amount">Montant (€) :</label><input type="number" step="0.01" inputmode="decimal" id="fm-amount"></div>
+  <div class="field"><label for="fm-tech">Technicien :</label><select id="fm-tech"><option>Brendan</option><option>Hamlili</option></select></div>
+  <div class="field"><label for="fm-comment">Station / Commentaire :</label><input type="text" id="fm-comment"></div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn-primary" id="fm-save">Mettre à jour</button><button class="btn-ghost" id="fm-del" style="color:var(--danger);border-color:var(--danger)">Supprimer</button></div>
+</div></div>
+
+<nav class="tabbar">
+  <button data-view="saisie" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+    Saisie
+  </button>
+  <button data-view="carburant">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v18M13 11h4a2 2 0 0 1 2 2v7a2 2 0 0 0 2 2M13 6h4"/><circle cx="7" cy="7" r="2"/></svg>
+    Carburant
+  </button>
+  <button data-view="historique">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Historique
+  </button>
+  <button data-view="tarifs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    Tarifs
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var URL_="https://script.google.com/macros/s/AKfycbxyJrikE3tF9uaiuMmJtGq8OafETWuLX354Zv6gufGWKX26NXxPNMMFX7p--rlIMWak1Q/exec";
+var TYPOS=[{n:"Aérien"},{n:"Souterrain"},{n:"Immeuble"},{n:"PLP"},{n:"PLP sans client",o:1},{n:"SAV"},{n:"Pré visite",o:1}];
+var TARIFS={"Aérien":{Orange:160,SFR:140},"Souterrain":{Orange:112,SFR:90},"Immeuble":{Orange:54.4,SFR:50},"PLP":{Orange:36,SFR:25},"PLP sans client":{Orange:12,SFR:0},"SAV":{Orange:36,SFR:10},"Pré visite":{Orange:32.4,SFR:0}};
+var APIE=37.6,TECHS=["Brendan","Hamlili"];
+var MOIS=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+var K={e:"raccordements_entries_v8_",f:"raccordements_fuel_v8",d:"raccordements_deleted_v9",df:"raccordements_delfuel_v9",o:"raccordements_outbox_v9"};
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function get(k,d){try{var r=localStorage.getItem(k);return r===null?d:JSON.parse(r)}catch(e){return d}}
+function set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function p2(n){return String(n).padStart(2,"0")}
+function iso(v){var d,m;
+  if(typeof v==="string"){var s=v.trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+    if((m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/)))return m[3]+"-"+p2(m[2])+"-"+p2(m[1]);
+    d=new Date(s);
+  }else d=v==null?new Date():(v instanceof Date?v:new Date(v));
+  if(isNaN(d))d=new Date();
+  return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());}
+function fr(s){return s.slice(8)+"/"+s.slice(5,7)+"/"+s.slice(0,4)}
+function fe(n){return (Number(n)||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €"}
+function cmp(a,b){return a.date<b.date?-1:a.date>b.date?1:0}
+function norm(e){return{id:e.id||String(e.num),num:String(e.num==null?"":e.num),date:iso(e.date),addr:e.addr||"",typo:e.typo||"",statut:e.statut||"Réussite",op:e.op||"Orange",solo:e.solo||"Solo",techSolo:e.techSolo||"",apie:!!e.apie||/\bAPIE\b/.test(e.comment||""),montant:Number(e.montant)||0,comment:e.comment||""}}
+function normF(f){return{id:f.id||(iso(f.date)+"_"+f.montant+"_"+(f.tech||"")),date:iso(f.date),montant:Number(f.montant)||0,tech:f.tech||"Brendan",comment:f.comment||""}}
+function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36)}
+function calc(t,st,op,ap){if(!t||st==="Échec")return 0;var r=TARIFS[t];if(!r)return 0;return Math.round(((r[op]||0)+(ap?APIE:0))*100)/100}
+function sum(l){return l.reduce(function(s,e){return s+e.montant},0)}
+function toast(m){var el=$("toast");el.textContent=m;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2500)}
+
+var URL_KEY="raccordements_url_v9";
+if(get(URL_KEY,"")!==URL_){try{TECHS.forEach(function(t){localStorage.removeItem(K.e+t)});[K.f,K.d,K.df,K.o].forEach(function(k){localStorage.removeItem(k)})}catch(e){}set(URL_KEY,URL_)}
+var db={};TECHS.forEach(function(t){db[t]=get(K.e+t,[]).map(norm).sort(cmp)});
+var fuel=get(K.f,[]).map(normF).sort(cmp),delIds=get(K.d,[]),delFuel=get(K.df,[]),outbox=get(K.o,[]);
+var tech="Brendan",fuelTech="Brendan",editId=null,syncing=false,chain=null,lastSync={};
+var now=new Date(),view={y:now.getFullYear(),m:now.getMonth()};
+var form={typo:"",statut:"Réussite",op:"Orange",solo:"Solo"},mf={op:"Orange",statut:"Réussite"};
+
+/* ---------- Synchro (file d'attente : rien n'est perdu hors-ligne) ---------- */
+function status(){var el=$("syncState"),n=outbox.length;
+  el.textContent=!navigator.onLine?"⚠ hors-ligne"+(n?" · "+n:""):n?"⏳ "+n+" en attente":syncing?"↻ synchro…":"✓ à jour"}
+function send(t,body){outbox.push({t:t,b:body});set(K.o,outbox);status();flush()}
+function flush(){
+  if(chain||!outbox.length||!URL_)return chain||Promise.resolve();
+  chain=(function next(){
+    if(!outbox.length)return Promise.resolve();
+    return fetch(URL_,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(outbox[0].b)})
+      .then(function(){outbox.shift();set(K.o,outbox);status();return next()});
+  })().catch(function(){clearTimeout(flush.t);flush.t=setTimeout(flush,30000)}).then(function(){chain=null;status()});
+  return chain}
+function getJSON(q){var c=new AbortController(),to=setTimeout(function(){c.abort()},20000);
+  return fetch(URL_+"?"+q+"&_t="+Date.now(),{cache:"no-store",signal:c.signal}).then(function(r){clearTimeout(to);return r.json()})}
+function pull(t,force){
+  if(!URL_||(!force&&Date.now()-(lastSync[t]||0)<60000))return;
+  syncing=true;status();
+  flush().then(function(){return getJSON(t==="fuel"?"type=fuel":"tech="+encodeURIComponent(t))})
+  .then(function(data){if(!Array.isArray(data))throw 0;t==="fuel"?mergeFuel(data):merge(t,data);lastSync[t]=Date.now();if(force)toast("À jour")})
+  .catch(function(){if(force)toast("Mode local (hors-ligne)")})
+  .then(function(){syncing=false;status()})}
+function merge(t,data){var map={},seen={};
+  data.forEach(function(r){var e=norm(r);seen[e.id]=1;if(delIds.indexOf(e.id)<0)map[e.id]=e});
+  delIds=delIds.filter(function(i){return seen[i]});set(K.d,delIds);
+  outbox.forEach(function(o){if(o.t!==t)return;var b=o.b;
+    if(b.action==="delete")delete map[b.id];
+    else if(b.action==="update"){if(map[b.id])map[b.id]=norm(Object.assign({},map[b.id],b))}
+    else if(!map[b.id])map[b.id]=norm(b)});
+  db[t]=Object.keys(map).map(function(k){return map[k]}).sort(cmp);set(K.e+t,db[t]);
+  if(t===tech)renderAll()}
+function mergeFuel(data){var map={};
+  data.forEach(function(r){var f=normF(r);map[f.id]=f});
+  outbox.forEach(function(o){if(o.t!=="fuel")return;var b=o.b;
+    if(b.action==="delete_fuel")delete map[b.id];
+    else if(b.action==="update_fuel"){if(map[b.id])map[b.id]=normF(Object.assign({},map[b.id],b))}
+    else if(!map[b.id])map[b.id]=normF(b)});
+  fuel=Object.keys(map).map(function(k){return map[k]}).sort(cmp);set(K.f,fuel);renderFuel()}
+
+/* ---------- Formulaire ---------- */
+function seg(id,cb){var w=$(id);w.addEventListener("click",function(ev){var b=ev.target.closest("button");if(!b)return;setSeg(id,b.dataset.val);cb(b.dataset.val)})}
+function setSeg(id,v){[].forEach.call($(id).children,function(b){b.classList.toggle("selected",b.dataset.val===v)})}
+function fillTypo(sel,op,cur){sel.innerHTML='<option value="">-- Sélectionner une typologie --</option>';
+  TYPOS.forEach(function(t){if(t.o&&op!=="Orange")return;var o=document.createElement("option");o.value=o.textContent=t.n;sel.appendChild(o)});
+  sel.value=cur||""}
+function target(){return form.solo==="Solo"?$("f-tech-solo").value:tech}
+function preview(){$("f-preview").textContent=fe(calc(form.typo,form.statut,form.op,$("f-apie").checked))}
+function daily(){var d=$("f-date").value,t=target();
+  $("dailyTotalDate").textContent=(d?fr(d):"--/--/----")+" · "+t;
+  $("dailyTotalAmount").textContent=fe(d?sum(db[t].filter(function(e){return e.date===d})):0)}
+function apieSync(chk,com){$(chk).addEventListener("change",function(){var c=$(com),v=c.value.trim();
+  if(this.checked){if(!/\bAPIE\b/.test(v))c.value=v?v+" APIE":"APIE"}else c.value=v.replace(/\bAPIE\b/g,"").replace(/\s+/g," ").trim();
+  if(chk==="f-apie")preview()})}
+
+var typoSel=$("f-typo"),mTypo=$("m-typo");
+fillTypo(typoSel,"Orange","");
+typoSel.addEventListener("change",function(){form.typo=typoSel.value;preview()});
+seg("f-statut",function(v){form.statut=v;preview()});
+seg("f-op",function(v){form.op=v;$("f-num").placeholder=v==="Orange"?"Ex : 0468934875 (10 chiffres obligatoires)":"Ex : 133627482 (9 chiffres obligatoires)";fillTypo(typoSel,v,form.typo);form.typo=typoSel.value;preview()});
+seg("f-solo",function(v){form.solo=v;$("wrap-tech-solo").style.display=v==="Solo"?"block":"none";daily()});
+$("f-tech-solo").addEventListener("change",daily);
+$("f-date").addEventListener("change",daily);
+seg("m-statut-seg",function(v){mf.statut=v});
+seg("m-op-seg",function(v){mf.op=v;fillTypo(mTypo,v,mTypo.value)});
+seg("fuel-tech",function(v){fuelTech=v});
+apieSync("f-apie","f-comment");apieSync("m-apie","m-comment");
+
+$("f-save").addEventListener("click",function(){
+  var date=$("f-date").value,num=$("f-num").value.replace(/\s+/g,""),ap=$("f-apie").checked;
+  if(!date||!num||!form.typo){toast("Veuillez remplir tous les champs obligatoires");return}
+  var len=form.op==="Orange"?10:9;
+  if(!new RegExp("^\\d{"+len+"}$").test(num)){toast("⚠️ "+form.op+" : le N° doit faire exactement "+len+" chiffres !");return}
+  var t=target();
+  if(db[t].some(function(e){return e.num===num&&e.op===form.op})&&!confirm("Cette référence existe déjà. L'ajouter quand même ?"))return;
+  var e={id:newId("INT-"),num:num,date:date,addr:$("f-addr").value.trim(),typo:form.typo,statut:form.statut,op:form.op,solo:form.solo,techSolo:$("f-tech-solo").value,apie:ap,montant:calc(form.typo,form.statut,form.op,ap),comment:$("f-comment").value.trim()};
+  db[t].push(e);db[t].sort(cmp);set(K.e+t,db[t]);send(t,e);
+  ["f-num","f-addr","f-comment"].forEach(function(i){$(i).value=""});
+  $("f-apie").checked=false;typoSel.value="";form.typo="";
+  preview();renderAll();toast("✅ Intervention ajoutée !")});
+
+/* ---------- Historique ---------- */
+function ym(){return view.y+"-"+p2(view.m+1)}
+function rate(l){var s=l.filter(function(e){return e.statut==="Réussite"}).length,p=l.length?Math.round(s/l.length*100):0;
+  return{p:p,full:s+"/"+l.length+" "+(s>1?"dossiers réussis":"dossier réussi")+" ("+p+"%)",short:s+"/"+l.length+" ("+p+"%)"}}
+function putStats(k,l){var g=rate(l),o=rate(l.filter(function(e){return e.op==="Orange"})),s=rate(l.filter(function(e){return e.op==="SFR"}));
+  $("stat-"+k+"-pct-badge").textContent=g.p+"%";$("stat-"+k+"-global").textContent=g.full;$("stat-"+k+"-orange").textContent=o.short;$("stat-"+k+"-sfr").textContent=s.short}
+function weekRange(){var d=new Date(),k=(d.getDay()+6)%7,a=new Date(d.getFullYear(),d.getMonth(),d.getDate()-k),b=new Date(a.getFullYear(),a.getMonth(),a.getDate()+6);return[iso(a),iso(b)]}
+function monthList(){var q=$("histSearch").value.trim().toLowerCase(),l=db[tech].filter(function(e){return e.date.slice(0,7)===ym()});
+  return q?l.filter(function(e){return(e.num+" "+e.comment+" "+e.typo+" "+e.op+" "+e.addr).toLowerCase().indexOf(q)>-1}):l}
+function renderHist(){
+  $("monthLabel").textContent=MOIS[view.m]+" "+view.y;
+  var all=db[tech].filter(function(e){return e.date.slice(0,7)===ym()}),w=weekRange();
+  putStats("month",all);putStats("week",db[tech].filter(function(e){return e.date>=w[0]&&e.date<=w[1]}));
+  var or=sum(all.filter(function(e){return e.op==="Orange"})),sf=sum(all.filter(function(e){return e.op==="SFR"}));
+  $("totalGlobalBadge").textContent=MOIS[view.m]+" : "+fe(sum(all))+" (🍊 "+fe(or)+" | 🔴 "+fe(sf)+")";
+  $("splitTotals").textContent="Solo "+fe(sum(all.filter(function(e){return e.solo!=="Binôme"})))+"  ·  Binôme "+fe(sum(all.filter(function(e){return e.solo==="Binôme"})));
+  var l=monthList().slice().reverse(),h="",last="";
+  if(!l.length)h='<div class="empty">Aucune intervention trouvée.</div>';
+  l.forEach(function(e,i){
+    if(e.date!==last){last=e.date;var d=sum(l.filter(function(x){return x.date===e.date}));h+='<div class="dh"><span>'+fr(e.date)+'</span><b>'+fe(d)+'</b></div>'}
+    h+='<div class="rw" data-id="'+esc(e.id)+'"><div class="r1"><span>'+(e.statut==="Réussite"?"👍":"❌")+' <b>'+esc(e.num)+'</b></span><span class="tarif-val" style="color:'+(e.op==="Orange"?"#FF7900":"#EF4444")+'">'+fe(e.montant)+'</span></div>'+
+      '<div class="r2"><span class="badge-typo">'+esc(e.typo)+'</span><span class="badge-op">'+esc(e.op)+'</span>'+(e.apie?'<span class="badge-typo">APIE</span>':'')+(e.solo==="Binôme"?'<span class="badge-typo">Binôme</span>':'')+
+      (e.addr?'<span class="ad">'+esc(e.addr)+'</span><a href="https://maps.google.com/?q='+encodeURIComponent(e.addr)+'" target="_blank" rel="noopener noreferrer" title="Google Maps">📍</a>':'')+
+      '<button class="btn-ghost x" data-del="1">✕</button></div></div>'});
+  $("histList").innerHTML=h}
+$("histList").addEventListener("click",function(ev){
+  if(ev.target.closest("a"))return;var row=ev.target.closest(".rw");if(!row)return;
+  var id=row.dataset.id;if(ev.target.closest("[data-del]"))return delEntry(id);
+  var e=db[tech].filter(function(x){return x.id===id})[0];if(e)openModal(e)});
+function delEntry(id){
+  if(!confirm("Supprimer cette intervention ?"))return;
+  var e=db[tech].filter(function(x){return x.id===id})[0];
+  if(delIds.indexOf(id)<0)delIds.push(id);set(K.d,delIds);
+  db[tech]=db[tech].filter(function(x){return x.id!==id});set(K.e+tech,db[tech]);
+  send(tech,{action:"delete",id:id,num:e?e.num:id,tech:tech});renderAll();toast("🗑️ Intervention supprimée")}
+
+/* ---------- Modale ---------- */
+function openModal(e){editId=e.id;
+  $("modalTitle").textContent="Intervention "+e.num;
+  $("m-date").value=e.date;$("m-num").value=e.num;$("m-addr").value=e.addr;$("m-comment").value=e.comment;
+  $("m-tech-solo").value=e.techSolo||tech;$("m-apie").checked=e.apie;
+  mf.op=e.op;mf.statut=e.statut;setSeg("m-op-seg",mf.op);setSeg("m-statut-seg",mf.statut);
+  fillTypo(mTypo,mf.op,e.typo);$("detailModal").classList.add("active")}
+function closeModal(){$("detailModal").classList.remove("active");editId=null}
+$("closeModal").addEventListener("click",closeModal);
+$("detailModal").addEventListener("click",function(ev){if(ev.target===this)closeModal()});
+$("m-del-btn").addEventListener("click",function(){var id=editId;if(id){closeModal();delEntry(id)}});
+$("m-save-btn").addEventListener("click",function(){
+  var date=$("m-date").value,num=$("m-num").value.replace(/\s+/g,""),typo=mTypo.value;
+  if(!editId||!date||!num||!typo){toast("Veuillez remplir tous les champs obligatoires");return}
+  var e=db[tech].filter(function(x){return x.id===editId})[0];if(!e)return;
+  var ap=$("m-apie").checked,oldNum=e.num;
+  Object.assign(e,{date:date,num:num,addr:$("m-addr").value.trim(),typo:typo,op:mf.op,statut:mf.statut,comment:$("m-comment").value.trim(),techSolo:$("m-tech-solo").value,apie:ap,montant:calc(typo,mf.statut,mf.op,ap)});
+  db[tech].sort(cmp);set(K.e+tech,db[tech]);
+  send(tech,Object.assign({action:"update",tech:tech,oldNum:oldNum},e));closeModal();renderAll();toast("✅ Intervention mise à jour !")});
+
+/* ---------- Carburant ---------- */
+function fuelRows(l){return l.length?l.map(function(f){return'<div class="rw fr" data-fid="'+esc(f.id)+'"><div><b>'+fr(f.date)+'</b>'+(f.comment?'<div class="r2">'+esc(f.comment)+'</div>':'')+'</div><div class="fa"><span class="tarif-val" style="color:var(--danger)">'+fe(f.montant)+'</span><button class="btn-ghost x" data-fdel="1">✕</button></div></div>'}).join(""):'<div class="empty">Aucun plein enregistré.</div>'}
+function renderFuel(){
+  var lab=MOIS[view.m]+" "+view.y;$("fuelMonthLabel").textContent=lab;$("fuelRecapMonth").textContent=lab;
+  var l=fuel.filter(function(f){return f.date.slice(0,7)===ym()}),b=l.filter(function(f){return f.tech!=="Hamlili"}),h=l.filter(function(f){return f.tech==="Hamlili"});
+  $("fuelListBrendan").innerHTML=fuelRows(b.slice().reverse());$("fuelListHamlili").innerHTML=fuelRows(h.slice().reverse());
+  $("fuelTotalBrendan").textContent=$("recapFuelBrendan").textContent=fe(sum(b));
+  $("fuelTotalHamlili").textContent=$("recapFuelHamlili").textContent=fe(sum(h));
+  $("fuelMonthTotal").textContent="Total Mois : "+fe(sum(l));$("recapFuelTotal").textContent=fe(sum(l))}
+function fuelBy(id){return fuel.filter(function(f){return f.id===id})[0]}
+function delFuelEntry(id){if(!confirm("Supprimer ce plein d'essence ?"))return;
+  fuel=fuel.filter(function(f){return f.id!==id});set(K.f,fuel);send("fuel",{action:"delete_fuel",id:id});renderFuel();toast("🗑️ Plein supprimé")}
+var fuelEdit=null;
+function closeFuel(){$("fuelModal").classList.remove("active");fuelEdit=null}
+["fuelListBrendan","fuelListHamlili"].forEach(function(l){$(l).addEventListener("click",function(ev){
+  var row=ev.target.closest(".fr");if(!row)return;var id=row.dataset.fid;
+  if(ev.target.closest("[data-fdel]"))return delFuelEntry(id);
+  var f=fuelBy(id);if(!f)return;fuelEdit=id;
+  $("fm-date").value=f.date;$("fm-amount").value=f.montant;$("fm-tech").value=f.tech;$("fm-comment").value=f.comment;$("fuelModal").classList.add("active")})});
+$("fm-close").addEventListener("click",closeFuel);
+$("fuelModal").addEventListener("click",function(ev){if(ev.target===this)closeFuel()});
+$("fm-del").addEventListener("click",function(){var id=fuelEdit;if(id){closeFuel();delFuelEntry(id)}});
+$("fm-save").addEventListener("click",function(){
+  var f=fuelBy(fuelEdit),d=$("fm-date").value,amt=parseFloat($("fm-amount").value);
+  if(!f||!d||isNaN(amt)||amt<=0){toast("Saisis un montant valide");return}
+  Object.assign(f,{date:d,montant:amt,tech:$("fm-tech").value,comment:$("fm-comment").value.trim()});
+  fuel.sort(cmp);set(K.f,fuel);send("fuel",Object.assign({action:"update_fuel"},f));closeFuel();renderFuel();toast("✅ Plein mis à jour !")});
+$("fuel-save").addEventListener("click",function(){
+  var date=$("fuel-date").value,amt=parseFloat($("fuel-amount").value);
+  if(!date||isNaN(amt)||amt<=0){toast("Saisis un montant valide");return}
+  var f={id:newId("FUEL-"),date:date,montant:amt,tech:fuelTech,comment:$("fuel-comment").value.trim()};
+  fuel.push(f);fuel.sort(cmp);set(K.f,fuel);send("fuel",Object.assign({type:"fuel"},f));
+  $("fuel-amount").value=$("fuel-comment").value="";renderFuel();toast("Plein enregistré !")});
+
+/* ---------- Tarifs, navigation, export ---------- */
+function renderTarifs(){$("tariffRows").innerHTML=TYPOS.map(function(t){var r=TARIFS[t.n];
+  return'<tr style="border-bottom:1px solid var(--border)"><td style="padding:10px;font-weight:600">'+esc(t.n)+'</td><td style="padding:10px;color:#FF7900;font-family:var(--font-mono)">'+fe(r.Orange)+'</td><td style="padding:10px;color:#EF4444;font-family:var(--font-mono)">'+(t.o?"-":fe(r.SFR))+'</td></tr>'}).join("")}
+function renderAll(){renderHist();daily()}
+function shift(n){view.m+=n;if(view.m<0){view.m=11;view.y--}else if(view.m>11){view.m=0;view.y++}renderHist();renderFuel()}
+[["prevMonth",-1],["nextMonth",1],["prevMonthFuel",-1],["nextMonthFuel",1]].forEach(function(a){$(a[0]).addEventListener("click",function(){shift(a[1])})});
+seg("hist-tech-select",function(v){tech=v;renderAll();pull(v)});
+$("histSearch").addEventListener("input",renderHist);
+$("reloadBtn").addEventListener("click",function(){pull(tech,true);pull("fuel",true)});
+document.querySelector(".tabbar").addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;var v=b.dataset.view;
+  [].forEach.call(document.querySelectorAll(".tabbar button"),function(x){x.classList.toggle("active",x===b)});
+  [].forEach.call(document.querySelectorAll(".view"),function(s){s.classList.toggle("active",s.id==="view-"+v)});
+  if(v==="carburant"){renderFuel();pull("fuel")}
+  if(v==="historique"){renderHist();pull(tech)}
+  if(v==="tarifs")renderTarifs();
+  if(v==="saisie")daily()});
+$("exportXlsx").addEventListener("click",function(){
+  var l=monthList();if(!l.length){toast("Aucune donnée à exporter");return}
+  function go(){var ws=XLSX.utils.json_to_sheet(l.map(function(e){return{"Date":fr(e.date),"N° Ref":e.num,"Opérateur":e.op,"Typologie":e.typo,"Statut":e.statut,"Montant (€)":e.montant,"Adresse":e.addr,"Commentaire":e.comment}})),wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,"Interventions");XLSX.writeFile(wb,"Interventions_"+tech+"_"+(view.m+1)+"_"+view.y+".xlsx")}
+  if(window.XLSX)return go();
+  var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=go;s.onerror=function(){toast("Export indisponible hors-ligne")};document.head.appendChild(s)});
+window.addEventListener("online",function(){status();pull(tech,true)});
+window.addEventListener("offline",status);
+document.addEventListener("visibilitychange",function(){if(!document.hidden){checkDay();flush();pull(tech)}});
+
+var today=iso(new Date());
+function checkDay(){var t=iso(new Date());if(t===today)return;today=t;var n=new Date();view.y=n.getFullYear();view.m=n.getMonth();
+  $("f-date").value=$("fuel-date").value=t;renderAll();renderFuel()}
+setInterval(checkDay,30000);
+$("f-date").value=$("fuel-date").value=today;
+renderAll();status();flush();pull(tech);
+})();
+</script>
+</body>
+</html>
