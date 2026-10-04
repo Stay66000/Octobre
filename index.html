@@ -309,6 +309,10 @@
   .fr { display: flex; justify-content: space-between; align-items: center; background: var(--surface-alt); }
   .fa { display: flex; align-items: center; gap: 8px; }
   .empty { color: var(--ink-muted); text-align: center; padding: 20px; font-size: 12px; }
+  .cap .th { width: 100%; max-height: 80px; object-fit: cover; object-position: top; border-radius: 6px; opacity: .9; }
+  .cs { font-size: 11px; color: var(--ink-muted); margin: 6px 0; }
+  .cap-row { display: flex; gap: 8px; } .cap-row .field { flex: 1; }
+  .chk { display: flex; gap: 8px; align-items: center; font-size: 13px; margin: 6px 0; }
 </style>
 </head>
 <body>
@@ -327,6 +331,15 @@
       <div class="field">
         <label for="f-date">Date</label>
         <input type="date" id="f-date">
+      </div>
+      <div class="field">
+        <div class="cap-row" style="align-items:center;justify-content:space-between">
+          <label class="btn-ghost" style="cursor:pointer;display:inline-block">📷 Ajouter une capture<input type="file" id="cap-file" accept="image/*" hidden></label>
+          <button type="button" id="cap-link" style="display:none;background:none;border:none;color:var(--accent-text);text-decoration:underline;font-size:13px;cursor:pointer"></button>
+        </div>
+        <div id="cap-msg" class="cs"></div>
+        <img id="cap-img" alt="Capture" style="display:none;width:100%;border-radius:8px;margin-top:6px">
+        <details class="dt"><summary class="cs">Texte lu</summary><pre id="cap-raw" style="white-space:pre-wrap;font-size:10px;color:var(--ink-muted)"></pre></details>
       </div>
       <div class="field">
         <label>Opérateur</label>
@@ -904,8 +917,40 @@ function checkDay(){var t=iso(new Date());if(t===today)return;today=t;var n=new 
 setInterval(checkDay,30000);
 $("f-date").value=$("fuel-date").value=today;
 renderAll();status();flush();pull(tech);
+/* ---------- Capture d'écran dans la saisie (lecture auto du ND et de l'adresse) ---------- */
+function parseCap(t){
+  t=t.replace(/\b[Oo](?=(?:[ .]?\d){9})/g,"0");
+  var L=t.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean),pc=-1,a="",i=-1;
+  var c=(t.match(/0[1-9](?:[ .]?\d){8}/g)||[]).map(function(x){return x.replace(/\D/g,"")}).filter(function(x){return x.length===10});
+  var m=t.match(/ND\D{0,6}(0[1-9](?:[ .]?\d){8})/i),nd=m?m[1].replace(/\D/g,""):(c[0]||"");
+  L.forEach(function(l,k){if(pc<0&&/(^|\s)\d{5}\s+[A-Za-zÀ-ÿ]/.test(l))pc=k;if(i<0&&/^adresse\b/i.test(l))i=k});
+  if(pc>-1){var b=L[pc].split(/\d{5}/)[0].trim();a=b.length>5?L[pc]:(pc>0?L[pc-1]+" "+L[pc]:L[pc])}
+  else if(i>-1&&L[i+2])a=L[i+1]+" "+L[i+2];
+  return{nd:nd,addr:a.replace(/^adresse\s*/i,"").replace(/[|«»©®]+/g," ").replace(/\s+/g," ").trim()}}
+function loadT(){if(window.Tesseract)return Promise.resolve();
+  return new Promise(function(ok,ko){var s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";s.onload=ok;s.onerror=function(){ko(new Error("module de lecture indisponible"))};document.head.appendChild(s)})}
+function prep(file){return new Promise(function(ok){var im=new Image();im.onload=function(){
+  var c=document.createElement("canvas"),x,d,p,i,g,sum=0;c.width=im.width*2;c.height=im.height*2;x=c.getContext("2d");x.drawImage(im,0,0,c.width,c.height);
+  d=x.getImageData(0,0,c.width,c.height);p=d.data;
+  for(i=0;i<p.length;i+=4){g=.299*p[i]+.587*p[i+1]+.114*p[i+2];p[i]=p[i+1]=p[i+2]=g;sum+=g}
+  if(sum/(p.length/4)<128)for(i=0;i<p.length;i+=4){p[i]=p[i+1]=p[i+2]=255-p[i]}
+  x.putImageData(d,0,0);URL.revokeObjectURL(im.src);ok(c)};im.onerror=function(){ok(file)};im.src=URL.createObjectURL(file)})}
+var capUrl="";
+$("cap-file").addEventListener("change",function(){
+  var f=this.files[0];this.value="";if(!f)return;
+  if(capUrl)URL.revokeObjectURL(capUrl);capUrl=URL.createObjectURL(f);
+  $("cap-img").src=capUrl;$("cap-img").style.display="none";
+  $("cap-link").style.display="inline";$("cap-link").textContent="📎 Voir la capture";
+  var m=$("cap-msg");m.textContent="⏳ Lecture de la capture…";
+  loadT().then(function(){return prep(f)}).then(function(img){return Tesseract.recognize(img,"fra")}).then(function(r){
+    var p=parseCap(r.data.text);$("cap-raw").textContent=r.data.text;
+    if(p.nd)$("f-num").value=p.nd;if(p.addr)$("f-addr").value=p.addr;
+    if(p.nd){$("f-op").querySelector('[data-val="Orange"]').click();$("f-solo").querySelector('[data-val="Binôme"]').click()}
+    preview();
+    m.textContent=p.nd||p.addr?"✓ "+(p.nd?"N°":"")+(p.nd&&p.addr?" et ":"")+(p.addr?"adresse":"")+" rempli(s) : vérifie"+(p.nd?" · Orange + Binôme cochés, choisis la typologie":""):"⚠️ Rien trouvé : saisis à la main (voir « Texte lu »)";
+  }).catch(function(err){m.textContent="⚠️ Lecture impossible ("+((err&&err.message)||"connexion ?")+") : saisis à la main"})});
+$("cap-link").addEventListener("click",function(){var i=$("cap-img"),h=i.style.display==="none";i.style.display=h?"block":"none";this.textContent=h?"📎 Masquer la capture":"📎 Voir la capture"});
 })();
 </script>
 </body>
-</html>
 </html>
