@@ -902,11 +902,24 @@ document.querySelector(".tabbar").addEventListener("click",function(ev){
   if(v==="tarifs")renderTarifs();
   if(v==="saisie")daily()});
 $("exportXlsx").addEventListener("click",function(){
-  var l=monthList();if(!l.length){toast("Aucune donnée à exporter");return}
-  function go(){var ws=XLSX.utils.json_to_sheet(l.map(function(e){return{"Date":fr(e.date),"N° Ref":e.num,"Opérateur":e.op,"Typologie":e.typo,"Statut":e.statut,"Montant (€)":e.montant,"Adresse":e.addr,"Commentaire":e.comment}})),wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,"Interventions");XLSX.writeFile(wb,"Interventions_"+tech+"_"+(view.m+1)+"_"+view.y+".xlsx")}
-  if(window.XLSX)return go();
-  var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=go;s.onerror=function(){toast("Export indisponible hors-ligne")};document.head.appendChild(s)});
+  var l=monthList().slice().sort(cmp);if(!l.length){toast("Aucune donnée à exporter");return}
+  function go(){
+    var wb=new ExcelJS.Workbook(),ws=wb.addWorksheet("Interventions",{views:[{state:"frozen",ySplit:1}]}),bd={style:"thin",color:{argb:"FFD0D7E2"}},B={top:bd,left:bd,bottom:bd,right:bd};
+    ws.columns=[{header:"Date",key:"d",width:12},{header:"N° intervention",key:"n",width:16},{header:"Opérateur",key:"o",width:12},{header:"Typologie",key:"t",width:16},{header:"Statut",key:"s",width:12},{header:"Montant (€)",key:"m",width:14},{header:"Adresse",key:"a",width:46},{header:"Commentaire",key:"c",width:32}];
+    var h=ws.getRow(1);h.height=26;h.eachCell(function(c){c.font={bold:true,color:{argb:"FFFFFFFF"},size:11};c.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF2F5597"}};c.alignment={vertical:"middle",horizontal:"center",wrapText:true};c.border=B});
+    l.forEach(function(e,i){var p=e.date.split("-"),r=ws.addRow({d:new Date(Date.UTC(+p[0],+p[1]-1,+p[2])),n:e.num,o:e.op,t:e.typo,s:e.statut,m:e.montant,a:e.addr,c:e.comment});
+      r.eachCell(function(c){c.border=B;c.alignment={vertical:"middle",wrapText:true};if(i%2)c.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFF4F6FA"}}});
+      r.getCell("d").numFmt="dd/mm/yyyy";r.getCell("n").numFmt="@";r.getCell("m").numFmt='#,##0.00 "€"';
+      ["d","n","o","t","s"].forEach(function(k){r.getCell(k).alignment={vertical:"middle",horizontal:"center"}});
+      r.getCell("o").font={bold:true,color:{argb:e.op==="Orange"?"FFFF7900":"FFEF4444"}};
+      r.getCell("s").font={bold:true,color:{argb:e.statut==="Réussite"?"FF16A34A":"FFDC2626"}}});
+    var lr=ws.rowCount,tr=ws.getRow(lr+2),tc=tr.getCell(5),ta=tr.getCell(6);
+    tc.value="TOTAL";ta.value={formula:"SUM(F2:F"+lr+")",result:Math.round(sum(l)*100)/100};ta.numFmt='#,##0.00 "€"';
+    [tc,ta].forEach(function(c){c.font={bold:true,size:12};c.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFDCE6F5"}};c.border=B;c.alignment={vertical:"middle",horizontal:"center"}});
+    ws.autoFilter={from:"A1",to:"H1"};
+    wb.xlsx.writeBuffer().then(function(buf){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));a.download="Interventions_"+tech+"_"+(view.m+1)+"_"+view.y+".xlsx";document.body.appendChild(a);a.click();a.remove()})}
+  if(window.ExcelJS)return go();
+  var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js";s.onload=go;s.onerror=function(){toast("Export indisponible hors-ligne")};document.head.appendChild(s)});
 window.addEventListener("online",function(){status();pull(tech,true)});
 window.addEventListener("offline",status);
 document.addEventListener("visibilitychange",function(){if(!document.hidden){checkDay();flush();pull(tech)}});
