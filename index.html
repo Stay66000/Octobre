@@ -950,7 +950,12 @@ function prep(file){return new Promise(function(ok){var im=new Image();im.onload
   x.putImageData(d,0,0);URL.revokeObjectURL(im.src);ok(c)};im.onerror=function(){ok(file)};im.src=URL.createObjectURL(file)})}
 var capUrl="";
 $("cap-file").addEventListener("change",function(){
-  var f=this.files[0];this.value="";if(!f)return;
+  var f0=this.files[0],inp=this;if(!f0)return;
+  $("cap-msg").textContent="⏳ Chargement de la photo…";
+  // Android : on copie la photo en mémoire AVANT de vider le champ, sinon le fichier devient illisible
+  f0.arrayBuffer().then(function(buf){inp.value="";capRun(new Blob([buf],{type:f0.type||"image/jpeg"}))})
+  .catch(function(){inp.value="";$("cap-msg").textContent="⚠️ Photo illisible : choisis-la depuis la Galerie de l'appareil (pas depuis le cloud), ou refais une capture"})});
+function capRun(f){
   if(capUrl)URL.revokeObjectURL(capUrl);capUrl=URL.createObjectURL(f);
   $("cap-img").src=capUrl;$("cap-img").style.display="none";
   $("cap-link").style.display="inline";$("cap-link").textContent="📎 Voir la capture";
@@ -961,7 +966,7 @@ $("cap-file").addEventListener("change",function(){
     if(p.nd){$("f-op").querySelector('[data-val="Orange"]').click();$("f-solo").querySelector('[data-val="Binôme"]').click()}
     preview();
     m.textContent=p.nd||p.addr?"✓ "+(p.nd?"N°":"")+(p.nd&&p.addr?" et ":"")+(p.addr?"adresse":"")+" rempli(s) : vérifie"+(p.nd?" · Orange + Binôme cochés, choisis la typologie":""):"⚠️ Rien trouvé : saisis à la main (voir « Texte lu »)";
-  }).catch(function(err){m.textContent="⚠️ Lecture impossible ("+((err&&err.message)||"connexion ?")+") : saisis à la main"})});
+  }).catch(function(err){m.textContent="⚠️ Lecture impossible ("+((err&&err.message)||"connexion ?")+") : saisis à la main"})}
 $("cap-link").addEventListener("click",function(){var i=$("cap-img"),h=i.style.display==="none";i.style.display=h?"block":"none";this.textContent=h?"📎 Masquer la capture":"📎 Voir la capture"});
 })();
 </script>
