@@ -690,6 +690,20 @@ button:hover, .quick-btn:hover { filter: brightness(1.08); }
   .kpi-grid .kpi, .activity-item, button, .quick-btn, .progress-fill { transition: none !important; }
 }
 
+
+/* Historique : couleurs opérateurs clairement différenciées */
+.badge-op-orange {
+  color: #ff8a1f !important;
+  border-color: rgba(255,138,31,.72) !important;
+  background: rgba(255,138,31,.13) !important;
+  box-shadow: 0 0 10px rgba(255,138,31,.10);
+}
+.badge-op-sfr {
+  color: #ff454f !important;
+  border-color: rgba(255,69,79,.72) !important;
+  background: rgba(255,69,79,.13) !important;
+  box-shadow: 0 0 10px rgba(255,69,79,.10);
+}
 </style>
 </head>
 <body>
@@ -1591,7 +1605,7 @@ function renderHist() {
         var item = document.createElement("div");
         item.className = "rw";
         item.innerHTML = '<div class="r1">' +
-                           '<span><b>' + esc(e.num || "Sans N°") + '</b> <span class="badge-op">' + esc(e.op) + '</span></span>' +
+                           '<span><b>' + esc(e.num || "Sans N°") + '</b> <span class="badge-op ' + ((e.op || 'Orange').toLowerCase() === 'sfr' ? 'badge-op-sfr' : 'badge-op-orange') + '">' + esc(e.op) + '</span></span>' +
                            '<span class="tarif-val" style="color:' + (e.statut === 'Échec' ? 'var(--danger)' : 'var(--success)') + '">' + fe(e.montant) + '</span>' +
                          '</div>' +
                          '<div class="r2">' +
@@ -2003,6 +2017,16 @@ function setupOCR() {
     }
 
     foundAddr = foundAddr.replace(/^(Adresse|Adresse client|Lieu|Localisation|Site)[\s:]*/i, "").trim();
+    // Nettoyage des erreurs OCR courantes dans les adresses : tokens parasites et A- lu à la place de é.
+    foundAddr = foundAddr
+      .replace(/\bIE\b/gi, " ")
+      .replace(/\bM\b/g, " ")
+      .replace(/\bA\s*-/g, "é")
+      .replace(/\s*,\s*/g, ", ")
+      .replace(/\s{2,}/g, " ")
+      .replace(/^[,\s]+|[,\s]+$/g, "")
+      .replace(/,\s*,+/g, ",")
+      .trim();
 
     if (foundAddr) {
       $("f-addr").value = foundAddr;
