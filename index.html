@@ -23,7 +23,6 @@
   /* code couleur des fibres optiques (norme à 12 brins) */
   --f1:#2f74ea; --f2:#f28a1e; --f3:#2fb36a; --f4:#9a6240; --f5:#98a4b4; --f6:#eef1f5;
   --f7:#e5484d; --f8:#4b5462; --f9:#f2cf3b; --f10:#8a5cf6; --f11:#f27fb0; --f12:#2bc6d2;
-  --ribbon:linear-gradient(90deg,var(--f1) 0 8.33%,var(--f2) 8.33% 16.66%,var(--f3) 16.66% 25%,var(--f4) 25% 33.33%,var(--f5) 33.33% 41.66%,var(--f6) 41.66% 50%,var(--f7) 50% 58.33%,var(--f8) 58.33% 66.66%,var(--f9) 66.66% 75%,var(--f10) 75% 83.33%,var(--f11) 83.33% 91.66%,var(--f12) 91.66% 100%);
   --font-sans:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --font-num:'Chakra Petch',ui-monospace,'SF Mono',Menlo,monospace; --font-mono:var(--font-num);
   --r-lg:22px; --r-md:16px; --r-sm:12px;
@@ -49,7 +48,6 @@ button{-webkit-tap-highlight-color:transparent}
 
 /* En-tête */
 header.top{position:sticky;top:0;z-index:50;background:var(--bg);padding:calc(12px + env(safe-area-inset-top)) 16px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line)}
-header.top::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--ribbon)}
 .brand-wrap{display:flex;align-items:center;gap:10px;min-width:0}
 .brand-mark{width:34px;height:34px;flex:none}
 .brand{font-family:var(--font-num);font-weight:700;font-size:17px;letter-spacing:.05em;line-height:1}
@@ -184,12 +182,13 @@ nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-
 .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
 .hero-actions button{min-height:46px;font-size:14px}
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:12px;box-shadow:var(--shadow)}
-.stat.wide{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
-.stat .k{font-size:13.5px;color:var(--ink-muted)}
-.stat .v{font-family:var(--font-num);font-size:22px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
-.stat .s{font-size:12px;color:var(--ink-dim);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;box-shadow:var(--shadow);overflow:hidden}
+.stat.wide{grid-column:1/span 3;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.stat .k{font-size:12px;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .v{font-family:var(--font-num);font-size:18px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat .s{font-size:11px;color:var(--ink-dim);margin-top:3px}
+.stat.wide .v{font-size:22px}
 .stat.wide .s{margin:0 0 2px;text-align:right}
 .rate-bar{height:5px;border-radius:99px;background:var(--surface-alt);margin-top:8px;overflow:hidden}
 .rate-bar i{display:block;height:100%;width:0;background:var(--success);border-radius:99px;transition:width .6s}
@@ -237,7 +236,8 @@ nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-
   .hero-amount{font-size:36px}
   .dash-head h1{font-size:22px}
   .view-title{font-size:21px}
-  .stat .v{font-size:20px}
+  .stat .v{font-size:16px}
+  .stat .k{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .setting-block.wide{grid-column:1/-1}
@@ -276,7 +276,7 @@ body.light{--f6:#b4bfcd}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11a8.1 8.1 0 0 0-14.9-3M4 13a8.1 8.1 0 0 0 14.9 3"/><path d="M5 4v4h4M19 20v-4h-4"/></svg>
     </button>
     <button class="btn-ghost header-icon" id="settingsBtn" title="Réglages" aria-label="Réglages">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06-1.75 1.75-.06-.06A1.8 1.8 0 0 0 16 18.37a1.8 1.8 0 0 0-1.1.9V19.4a1.8 1.8 0 0 0-1.8 1.8h-2.2A1.8 1.8 0 0 0 9.1 19.4v-.13A1.8 1.8 0 0 0 8 18.37a1.8 1.8 0 0 0-2.01.36l-.06.06-1.75-1.75.06-.06A1.8 1.8 0 0 0 4.6 15a1.8 1.8 0 0 0-.9-1.1H3.6A1.8 1.8 0 0 0 1.8 12v-2.2A1.8 1.8 0 0 0 3.6 8h.13A1.8 1.8 0 0 0 4.6 7a1.8 1.8 0 0 0-.36-2.01l-.06-.06 1.75-1.75.06.06A1.8 1.8 0 0 0 8 3.63a1.8 1.8 0 0 0 1.1-.9V2.6A1.8 1.8 0 0 0 10.9.8h2.2A1.8 1.8 0 0 0 14.9 2.6v.13A1.8 1.8 0 0 0 16 3.63a1.8 1.8 0 0 0 2.01-.36l.06-.06 1.75 1.75-.06.06A1.8 1.8 0 0 0 19.4 7a1.8 1.8 0 0 0 .9 1.1h.13A1.8 1.8 0 0 0 22.2 9.8V12A1.8 1.8 0 0 0 20.4 13.8h-.13A1.8 1.8 0 0 0 19.4 15Z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.06.06-1.75 1.75-.06-.06A1.8 1.8 0 0 0 16 18.37a1.8 1.8 0 0 0-1.1.9V19.4a1.8 1.8 0 0 0-1.8 1.8h-2.2A1.8 1.8 0 0 0 9.1 19.4v-.13A1.8 1.8 0 0 0 8 18.37a1.8 1.8 0 0 0-2.01.36l-.06.06-1.75-1.75.06-.06A1.8 1.8 0 0 0 4.6 15a1.8 1.8 0 0 0-.9-1.1H3.6A1.8 1.8 0 0 0 1.8 12v-2.2A1.8 1.8 0 0 0 3.6 8h.13A1.8 1.8 0 0 0 4.6 7a1.8 1.8 0 0 0-.36-2.01l-.06-.06 1.75-1.75.06.06A1.8 1.8 0 0 0 8 3.63a1.8 1.8 0 0 0 1.1-.9V2.6A1.8 1.8 0 0 0 10.9.8h2.2A1.8 1.8 0 0 0 14.9 2.6v.13A1.8 1.8 0 0 0 16 3.63a1.8 1.8 0 0 0 2.01-.36l.06-.06 1.75-1.75.06.06A1.8 1.8 0 0 0 19.4 7a1.8 1.8 0 0 0 .9 1.1h.13A1.8 1.8 0 0 0 22.2 9.8V12A1.8 1.8 0 0 0 20.4 13.8h-.13A1.8 1.8 0 0 0 19.4 15Z"/></svg>
     </button>
   </div>
 </header>
@@ -307,6 +307,7 @@ body.light{--f6:#b4bfcd}
       <div class="stat wide"><div><div class="k">Chiffre d'affaires du mois</div><div class="v" id="dashMonthAmount">0,00 €</div></div><div class="s" id="dashMonthSub">0 intervention</div></div>
       <div class="stat"><div class="k">Carburant du mois</div><div class="v" id="dashFuelAmount">0,00 €</div><div class="s" id="dashFuelSub">Aucun plein</div></div>
       <div class="stat"><div class="k">Marge estimée</div><div class="v" id="dashMarginAmount">0,00 €</div><div class="s">Après carburant</div></div>
+      <div class="stat"><div class="k">Marges personnel estimée</div><div class="v" id="dashPersonalMarginAmount">0,00 €</div><div class="s">Binôme/2 + Solo - Carburant</div></div>
       <div class="stat wide"><div style="flex:1"><div class="k">Taux de réussite du mois</div><div class="v" id="dashRate">0%</div><div class="rate-bar"><i id="dashRateBar"></i></div></div><div class="s" id="dashRateSub">0 sur 0 réussies</div></div>
     </div>
 
@@ -356,7 +357,6 @@ body.light{--f6:#b4bfcd}
       </div>
       <div class="field">
         <label for="f-num">N° intervention / Réf</label>
-        <div class="field-hint">Orange = 10 chiffres • SFR = 9 chiffres</div>
         <input type="text" inputmode="numeric" autocomplete="off" id="f-num" placeholder="Ex : 0468934875 (10 chiffres obligatoires)">
       </div>
       <div class="field">
@@ -381,12 +381,12 @@ body.light{--f6:#b4bfcd}
       <div class="field">
         <label>Mode de travail</label>
         <div class="seg" id="f-solo">
-          <button data-val="Solo" class="selected">Solo</button>
-          <button data-val="Binôme">Binôme</button>
+          <button data-val="Binôme" class="selected">Binôme</button>
+          <button data-val="Solo">Solo</button>
         </div>
       </div>
 
-      <div class="field" id="wrap-tech-solo" style="display:block;">
+      <div class="field" id="wrap-tech-solo" style="display:none;">
         <label for="f-tech-solo">Technicien en Solo</label>
         <select id="f-tech-solo">
           <option value="Brendan">Brendan</option>
@@ -398,7 +398,7 @@ body.light{--f6:#b4bfcd}
         <label for="f-comment">Commentaire</label>
         <input type="text" id="f-comment" placeholder="Remarques, détails...">
       </div>
-      <label class="chk"><input type="checkbox" id="f-apie"> Option APIE (+37,60 €)</label>
+      <label class="chk" id="wrap-apie"><input type="checkbox" id="f-apie"> Option APIE (+37,60 €)</label>
 
       <div class="preview">
         <span style="font-size:12px; color:var(--ink-muted);">Montant estimé</span>
@@ -646,7 +646,7 @@ body.light{--f6:#b4bfcd}
       <label for="m-comment">Commentaires :</label>
       <textarea id="m-comment" rows="2"></textarea>
     </div>
-    <label class="chk"><input type="checkbox" id="m-apie"> Option APIE (+37,60 €)</label>
+    <label class="chk" id="m-wrap-apie"><input type="checkbox" id="m-apie"> Option APIE (+37,60 €)</label>
     <div style="display:flex; gap:8px; margin-top:14px;">
       <button class="btn-primary" id="m-save-btn">Mettre à jour</button>
       <button class="btn-ghost" id="m-del-btn" style="color:var(--danger); border-color:var(--danger);">Supprimer</button>
@@ -738,10 +738,10 @@ function iso(v){var d,m;
 function fr(s){return s.slice(8)+"/"+s.slice(5,7)+"/"+s.slice(0,4)}
 function fe(n){return (Number(n)||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €"}
 function cmp(a,b){return a.date<b.date?-1:a.date>b.date?1:0}
-function norm(e){return{id:e.id||String(e.num),num:String(e.num==null?"":e.num),date:iso(e.date),addr:e.addr||"",typo:e.typo||"",statut:e.statut||"Réussite",op:e.op||"Orange",solo:e.solo||"Solo",techSolo:e.techSolo||"",apie:!!e.apie||/\bAPIE\b/.test(e.comment||""),montant:Number(e.montant)||0,comment:e.comment||""}}
+function norm(e){return{id:e.id||String(e.num),num:String(e.num==null?"":e.num),date:iso(e.date),addr:e.addr||"",typo:e.typo||"",statut:e.statut||"Réussite",op:e.op||"Orange",solo:e.solo||"Binôme",techSolo:e.techSolo||"",apie:!!e.apie||/\bAPIE\b/.test(e.comment||""),montant:Number(e.montant)||0,comment:e.comment||""}}
 function normF(f){return{id:f.id||(iso(f.date)+"_"+f.montant+"_"+(f.tech||"")),date:iso(f.date),montant:Number(f.montant)||0,tech:f.tech||"Brendan",comment:f.comment||""}}
 function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36)}
-function calc(t,st,op,ap){if(!t||st==="Échec")return 0;var r=TARIFS[t];if(!r)return 0;return Math.round(((r[op]||0)+(ap?APIE:0))*100)/100}
+function calc(t,st,op,ap){if(!t||st==="Échec")return 0;var r=TARIFS[t];if(!r)return 0;var apVal=(op==="SFR"?0:(ap?APIE:0));return Math.round(((r[op]||0)+apVal)*100)/100}
 function sum(l){return l.reduce(function(s,e){return s+e.montant},0)}
 function toast(m){var el=$("toast");el.textContent=m;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2500)}
 
@@ -751,9 +751,9 @@ var db={};TECHS.forEach(function(t){db[t]=get(K.e+t,[]).map(norm).sort(cmp)});
 var fuel=get(K.f,[]).map(normF).sort(cmp),delIds=get(K.d,[]),delFuel=get(K.df,[]),outbox=get(K.o,[]);
 var tech="Brendan",fuelTech="Brendan",editId=null,syncing=false,chain=null,lastSync={};
 var now=new Date(),view={y:now.getFullYear(),m:now.getMonth()};
-var form={typo:"",statut:"Réussite",op:"Orange",solo:"Solo"},mf={op:"Orange",statut:"Réussite"};
+var form={typo:"",statut:"Réussite",op:"Orange",solo:"Binôme"},mf={op:"Orange",statut:"Réussite"};
 
-/* ---------- Synchro (file d'attente : rien n'est perdu hors-ligne) ---------- */
+/* ---------- Synchro ---------- */
 function status(){var el=$("syncState"),n=outbox.length;
   el.textContent=!navigator.onLine?"⚠ hors-ligne"+(n?" · "+n:""):n?"⏳ "+n+" en attente":syncing?"↻ synchro…":"✓ à jour"}
 function send(t,body){outbox.push({t:t,b:body});set(K.o,outbox);status();flush()}
@@ -791,7 +791,14 @@ function mergeFuel(data){var map={};
     else if(!map[b.id])map[b.id]=normF(b)});
   fuel=Object.keys(map).map(function(k){return map[k]}).sort(cmp);set(K.f,fuel);renderFuel();renderDashboard()}
 
-/* ---------- Formulaire ---------- */
+/* ---------- Formulaire & UI ---------- */
+function updateApieVisibility(){
+  var isSfr=(form.op==="SFR");
+  $("wrap-apie").style.display=isSfr?"none":"flex";
+  if(isSfr){$("f-apie").checked=false;}
+  preview();
+}
+
 function seg(id,cb){var w=$(id);w.addEventListener("click",function(ev){var b=ev.target.closest("button");if(!b)return;setSeg(id,b.dataset.val);cb(b.dataset.val)})}
 function setSeg(id,v){[].forEach.call($(id).children,function(b){b.classList.toggle("selected",b.dataset.val===v)})}
 function fillTypo(sel,op,cur){sel.innerHTML='<option value="">-- Sélectionner une typologie --</option>';
@@ -806,13 +813,25 @@ var typoSel=$("f-typo"),mTypo=$("m-typo");
 fillTypo(typoSel,"Orange","");
 typoSel.addEventListener("change",function(){form.typo=typoSel.value;preview()});
 seg("f-statut",function(v){form.statut=v;preview()});
-seg("f-op",function(v){form.op=v;$("f-num").placeholder=v==="Orange"?"Ex : 0468934875 (10 chiffres obligatoires)":"Ex : 133627482 (9 chiffres obligatoires)";fillTypo(typoSel,v,form.typo);form.typo=typoSel.value;preview()});
+seg("f-op",function(v){
+  form.op=v;
+  fillTypo(typoSel,v,form.typo);
+  form.typo=typoSel.value;
+  updateApieVisibility();
+});
 seg("f-solo",function(v){form.solo=v;$("wrap-tech-solo").style.display=v==="Solo"?"block":"none";daily()});
 $("f-tech-solo").addEventListener("change",daily);
 $("f-date").addEventListener("change",daily);
 seg("m-statut-seg",function(v){mf.statut=v});
-seg("m-op-seg",function(v){mf.op=v;fillTypo(mTypo,v,mTypo.value)});
+seg("m-op-seg",function(v){
+  mf.op=v;
+  fillTypo(mTypo,v,mTypo.value);
+  var isSfr=(mf.op==="SFR");
+  $("m-wrap-apie").style.display=isSfr?"none":"flex";
+  if(isSfr)$("m-apie").checked=false;
+});
 seg("fuel-tech",function(v){fuelTech=v});
+
 function apieSync(chk,com){$(chk).addEventListener("change",function(){var c=$(com),v=c.value.trim();
   if(this.checked){if(!/\bAPIE\b/.test(v))c.value=v?v+" APIE":"APIE"}else c.value=v.replace(/\bAPIE\b/g,"").replace(/\s+/g," ").trim();
   if(chk==="f-apie")preview()})}
@@ -825,7 +844,7 @@ $("f-save").addEventListener("click",function(){
   if(!new RegExp("^\\d{"+len+"}$").test(num)){toast("⚠️ "+form.op+" : le N° doit faire exactement "+len+" chiffres !");return}
   var t=target();
   if(db[t].some(function(e){return e.num===num&&e.op===form.op})&&!confirm("Cette référence existe déjà. L'ajouter quand même ?"))return;
-  var e={id:newId("INT-"),num:num,date:date,addr:$("f-addr").value.trim(),typo:form.typo,statut:form.statut,op:form.op,solo:form.solo,techSolo:$("f-tech-solo").value,apie:$("f-apie").checked,montant:calc(form.typo,form.statut,form.op,$("f-apie").checked),comment:$("f-comment").value.trim()};
+  var e={id:newId("INT-"),num:num,date:date,addr:$("f-addr").value.trim(),typo:form.typo,statut:form.statut,op:form.op,solo:form.solo,techSolo:$("f-tech-solo").value,apie:form.op==="SFR"?false:$("f-apie").checked,montant:calc(form.typo,form.statut,form.op,$("f-apie").checked),comment:$("f-comment").value.trim()};
   db[t].push(e);db[t].sort(cmp);set(K.e+t,db[t]);send(t,e);
   ["f-num","f-addr","f-comment"].forEach(function(i){$(i).value=""});
   typoSel.value="";form.typo="";$("f-apie").checked=false;
@@ -851,8 +870,10 @@ function renderHist(){
   if(!l.length)h='<div class="empty">Aucune intervention trouvée.</div>';
   l.forEach(function(e,i){
     if(e.date!==last){last=e.date;var d=sum(l.filter(function(x){return x.date===e.date}));h+='<div class="dh"><span>'+fr(e.date)+'</span><b>'+fe(d)+'</b></div>'}
-    h+='<div class="rw '+(e.op==="Orange"?"op-o":"op-s")+'" data-id="'+esc(e.id)+'"><div class="r1"><span>'+(e.statut==="Réussite"?"👍":"❌")+' <b>'+esc(e.num)+'</b></span><span class="tarif-val" style="color:'+(e.op==="Orange"?"var(--orange)":"var(--sfr)")+'">'+fe(e.montant)+'</span></div>'+
-      '<div class="r2"><span class="badge-typo">'+esc(e.typo)+'</span><span class="badge-op">'+esc(e.op)+'</span>'+(e.apie?'<span class="badge-typo">APIE</span>':'')+(e.solo==="Binôme"?'<span class="badge-typo">Binôme</span>':'')+'</div>'+
+    var opColor=e.op==="Orange"?"var(--orange)":"var(--sfr)";
+    var opBg=e.op==="Orange"?"rgba(255,138,31,.14)":"rgba(239,68,68,.14)";
+    h+='<div class="rw '+(e.op==="Orange"?"op-o":"op-s")+'" data-id="'+esc(e.id)+'"><div class="r1"><span>'+(e.statut==="Réussite"?"👍":"❌")+' <b>'+esc(e.num)+'</b></span><span class="tarif-val" style="color:'+opColor+'">'+fe(e.montant)+'</span></div>'+
+      '<div class="r2"><span class="badge-typo">'+esc(e.typo)+'</span><span class="badge-op" style="color:'+opColor+';background:'+opBg+'">'+esc(e.op)+'</span>'+(e.apie?'<span class="badge-typo">APIE</span>':'')+(e.solo==="Binôme"?'<span class="badge-typo">Binôme</span>':'')+'</div>'+
       '<div class="r3"><span class="ad">'+(e.addr?esc(e.addr):'Pas d\'adresse')+'</span>'+(e.addr?'<a href="https://maps.google.com/?q='+encodeURIComponent(e.addr)+'" target="_blank" rel="noopener noreferrer" title="Google Maps">📍</a>':'')+
       '<button class="btn-ghost x" data-del="1" aria-label="Supprimer">✕</button></div></div>'});
   $("histList").innerHTML=h}
@@ -869,11 +890,15 @@ function delEntry(id){
 
 /* ---------- Modale ---------- */
 function openModal(e){editId=e.id;
-  $("modalTitle").textContent="Intervention "+e.num;
-  $("m-date").value=e.date;$("m-num").value=e.num;$("m-addr").value=e.addr;$("m-comment").value=e.comment;
-  $("m-tech-solo").value=e.techSolo||tech;$("m-apie").checked=e.apie;
-  mf.op=e.op;mf.statut=e.statut;setSeg("m-op-seg",mf.op);setSeg("m-statut-seg",mf.statut);
-  fillTypo(mTypo,mf.op,e.typo);$("detailModal").classList.add("active")}
+  $("modalTitle").textContent="Intervention "+(e.num||"");
+  $("m-date").value=e.date||"";$("m-num").value=e.num||"";$("m-addr").value=e.addr||"";$("m-comment").value=e.comment||"";
+  $("m-tech-solo").value=e.techSolo||tech;$("m-apie").checked=!!e.apie;
+  mf.op=e.op||"Orange";mf.statut=e.statut||"Réussite";setSeg("m-op-seg",mf.op);setSeg("m-statut-seg",mf.statut);
+  fillTypo(mTypo,mf.op,e.typo||"");
+  var isSfr=(mf.op==="SFR");
+  $("m-wrap-apie").style.display=isSfr?"none":"flex";
+  if(isSfr)$("m-apie").checked=false;
+  $("detailModal").classList.add("active")}
 function closeModal(){$("detailModal").classList.remove("active");editId=null}
 $("closeModal").addEventListener("click",closeModal);
 $("detailModal").addEventListener("click",function(ev){if(ev.target===this)closeModal()});
@@ -883,7 +908,7 @@ $("m-save-btn").addEventListener("click",function(){
   if(!editId||!date||!num||!typo){toast("Veuillez remplir tous les champs obligatoires");return}
   var e=db[tech].filter(function(x){return x.id===editId})[0];if(!e)return;
   var oldNum=e.num;
-  Object.assign(e,{date:date,num:num,addr:$("m-addr").value.trim(),typo:typo,op:mf.op,statut:mf.statut,comment:$("m-comment").value.trim(),techSolo:$("m-tech-solo").value,apie:$("m-apie").checked,montant:calc(typo,mf.statut,mf.op,$("m-apie").checked)});
+  Object.assign(e,{date:date,num:num,addr:$("m-addr").value.trim(),typo:typo,op:mf.op,statut:mf.statut,comment:$("m-comment").value.trim(),techSolo:$("m-tech-solo").value,apie:mf.op==="SFR"?false:$("m-apie").checked,montant:calc(typo,mf.statut,mf.op,$("m-apie").checked)});
   db[tech].sort(cmp);set(K.e+tech,db[tech]);
   send(tech,Object.assign({action:"update",tech:tech,oldNum:oldNum},e));closeModal();renderAll();toast("✅ Intervention mise à jour !")});
 
@@ -968,46 +993,126 @@ function checkDay(){var t=iso(new Date());if(t===today)return;today=t;var n=new 
   $("f-date").value=$("fuel-date").value=t;renderAll();renderFuel()}
 setInterval(checkDay,30000);
 $("f-date").value=$("fuel-date").value=today;
-/* ---------- Capture d'écran dans la saisie (lecture auto du ND et de l'adresse) ---------- */
+
+/* ---------- Capture d'écran (OCR optimisé avec règle du ND) ---------- */
 function parseCap(t){
-  t=t.replace(/\b[Oo](?=(?:[ .]?\d){9})/g,"0");
-  var L=t.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean),pc=-1,a="",i=-1;
-  var c=(t.match(/0[1-9](?:[ .]?\d){8}/g)||[]).map(function(x){return x.replace(/\D/g,"")}).filter(function(x){return x.length===10});
-  var m=t.match(/ND\D{0,6}(0[1-9](?:[ .]?\d){8})/i),nd=m?m[1].replace(/\D/g,""):(c[0]||"");
-  L.forEach(function(l,k){if(pc<0&&/(^|\s)\d{5}\s+[A-Za-zÀ-ÿ]/.test(l))pc=k;if(i<0&&/^adresse\b/i.test(l))i=k});
-  if(pc>-1){var b=L[pc].split(/\d{5}/)[0].trim();a=b.length>5?L[pc]:(pc>0?L[pc-1]+" "+L[pc]:L[pc])}
-  else if(i>-1&&L[i+2])a=L[i+1]+" "+L[i+2];
-  return{nd:nd,addr:a.replace(/^adresse\s*/i,"").replace(/[|«»©®]+/g," ").replace(/\s+/g," ").trim()}}
+  t=t.replace(/\b[Oo](?=(?:[ .]?\d){9,10})/g,"0");
+  var lines=t.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+  var nd="";
+  
+  // Extraction de tous les blocs numériques potentiels
+  var allNums=(t.match(/\b\d[\d\s\.]{7,11}\d\b/g)||[]).map(function(x){return x.replace(/\D/g,"")});
+  var valid=allNums.filter(function(x){return x.length===9||x.length===10});
+  nd=valid.length?valid[0]:"";
+  if(!nd){
+    var m10=t.match(/\b\d{10}\b/), m9=t.match(/\b\d{9}\b/);
+    nd=m10?m10[0]:(m9?m9[0]:"");
+  }
+
+  // Règle stricte : 9 chiffres = SFR, 10 chiffres = Orange
+  var op="Orange";
+  if(nd.length===9){
+    op="SFR";
+  } else if(nd.length===10){
+    op="Orange";
+  } else {
+    if(/sfr|osiris/i.test(t))op="SFR";
+    else op="Orange";
+  }
+
+  var addr="";
+  var streetPart="";
+  var cpPart="";
+
+  for(var i=0; i<lines.length; i++){
+    var l=lines[i];
+    var mCp=l.match(/\b(\d{5}\s+[A-Za-z\s-]+)\b/);
+    if(mCp){
+      cpPart=mCp[1].trim();
+      for(var j=i-1; j>=Math.max(0, i-3); j--){
+        var prev=lines[j]
+          .replace(/adresse\s*(?:client|raccordement)?/i, "")
+          .replace(/^PIT\b/i, "")
+          .replace(/^PLP\b/i, "")
+          .replace(/^PT[\,\s]*/i, "")
+          .trim();
+
+        if(prev.length > 3 && !/civilité|abonné|parcours|conquête|nom|prénom|dossier|statut|osiris/i.test(prev)){
+          streetPart=prev;
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  if(streetPart || cpPart){
+    addr = (streetPart ? streetPart + ", " : "") + cpPart;
+  } else {
+    for(var i=0; i<lines.length; i++){
+      var l=lines[i];
+      if(/parcours|abonné|conquête|client|dossier|intervention|raccordement|ref|réf|sfr|orange|osiris|statut/i.test(l)) continue;
+      if(/\b\d{5}\b/.test(l) || /rue|avenue|boulevard|chemin|impasse|place|allée|route|cours/i.test(l)){
+        addr=l;
+        if(!/\b\d{5}\b/.test(l) && i+1<lines.length && /\b\d{5}\b/.test(lines[i+1])){
+          addr=l+", "+lines[i+1];
+        }
+        break;
+      }
+    }
+  }
+
+  addr=addr.replace(/adresse\s*(?:client|raccordement)?\s*/i, "")
+           .replace(/^[\(\[]?[A-Z]{2,4}[\,\)]?\s*/i, "")
+           .replace(/^(?:PIT|PLP|SAV)\b[\,\s]*/i, "")
+           .replace(/\s+[a-z]\s*,\s*/g, ", ")
+           .replace(/[|«»©®]+/g, " ")
+           .replace(/\s+/g, " ")
+           .trim();
+
+  return{nd:nd,addr:addr,op:op}}
+
 function loadT(){if(window.Tesseract)return Promise.resolve();
   return new Promise(function(ok,ko){var s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";s.onload=ok;s.onerror=function(){ko(new Error("module de lecture indisponible"))};document.head.appendChild(s)})}
+
 function prep(file){return new Promise(function(ok){var im=new Image();im.onload=function(){
   var c=document.createElement("canvas"),x,d,p,i,g,sum=0;c.width=im.width*2;c.height=im.height*2;x=c.getContext("2d");x.drawImage(im,0,0,c.width,c.height);
   d=x.getImageData(0,0,c.width,c.height);p=d.data;
-  for(i=0;i<p.length;i+=4){g=.299*p[i]+.587*p[i+1]+.114*p[i+2];p[i]=p[i+1]=p[i+2]=g;sum+=g}
-  if(sum/(p.length/4)<128)for(i=0;i<p.length;i+=4){p[i]=p[i+1]=p[i+2]=255-p[i]}
-  x.putImageData(d,0,0);URL.revokeObjectURL(im.src);ok(c)};im.onerror=function(){ok(file)};im.src=URL.createObjectURL(file)})}
+  for(i=0;i<p.length;i+=4){g=.299*p[i]+.587*p[i+1]+.114*p[i+2];p[i]=p[i+1]=p[i+2]=g;}
+  x.putImageData(d,0,0);URL.revokeObjectURL(im.src);ok({canvas:c});};im.onerror=function(){ok({canvas:file});};im.src=URL.createObjectURL(file)})}
+
 var capUrl="";
 $("cap-file").addEventListener("change",function(){
   var f0=this.files[0],inp=this;if(!f0)return;
   $("cap-msg").textContent="⏳ Chargement de la photo…";
   f0.arrayBuffer().then(function(buf){inp.value="";capRun(new Blob([buf],{type:f0.type||"image/jpeg"}))})
-  .catch(function(){inp.value="";$("cap-msg").textContent="⚠️ Photo illisible : choisis-la depuis la Galerie de l'appareil (pas depuis le cloud), ou refais une capture"})});
+  .catch(function(){inp.value="";$("cap-msg").textContent="⚠️ Photo illisible : choisis-la depuis la Galerie de l'appareil"})});
+
 function capRun(f){
   if(capUrl)URL.revokeObjectURL(capUrl);capUrl=URL.createObjectURL(f);
   $("cap-img").src=capUrl;$("cap-img").style.display="none";
   $("cap-link").style.display="inline";$("cap-link").textContent="📎 Voir la capture";
   var m=$("cap-msg");m.textContent="⏳ Lecture de la capture…";
-  loadT().then(function(){return prep(f)}).then(function(img){return Tesseract.recognize(img,"fra")}).then(function(r){
-    var p=parseCap(r.data.text);$("cap-raw").textContent=r.data.text;
+  loadT().then(function(){return prep(f)}).then(function(res){
+    var img=res&&res.canvas?res.canvas:res;
+    return Tesseract.recognize(img,"fra").then(function(r){return r.data.text})
+  }).then(function(text){
+    var p=parseCap(text);
+    $("cap-raw").textContent=text;
     if(p.nd)$("f-num").value=p.nd;if(p.addr)$("f-addr").value=p.addr;
-    if(p.nd){$("f-op").querySelector('[data-val="Orange"]').click();$("f-solo").querySelector('[data-val="Binôme"]').click()}
+    
+    $("f-op").querySelector('[data-val="'+p.op+'"]').click();
+    form.op=p.op;
+    fillTypo(typoSel,p.op,form.typo);
+    updateApieVisibility();
+
     preview();
-    m.textContent=p.nd||p.addr?"✓ "+(p.nd?"N°":"")+(p.nd&&p.addr?" et ":"")+(p.addr?"adresse":"")+" rempli(s) : vérifie"+(p.nd?" · Orange + Binôme cochés, choisis la typologie":""):"⚠️ Rien trouvé : saisis à la main (voir « Texte lu »)";
+    m.textContent=p.nd||p.addr?"✓ "+(p.nd?"N° ("+p.nd.length+" chiffres) ":"")+(p.nd&&p.addr?" et ":"")+(p.addr?"adresse":"")+" rempli(s) : vérifie ("+p.op+")":"⚠️ Rien trouvé : saisis à la main (voir « Texte lu »)";
   }).catch(function(err){m.textContent="⚠️ Lecture impossible ("+((err&&err.message)||"connexion ?")+") : saisis à la main"})}
 
 $("cap-link").addEventListener("click",function(){var i=$("cap-img"),h=i.style.display==="none";i.style.display=h?"block":"none";this.textContent=h?"📎 Masquer la capture":"📎 Voir la capture"});
 
-/* ---------- Dashboard / outils V3 ---------- */
+/* ---------- Dashboard V3 ---------- */
 var DASH_KEY="raccordements_dashboard_v3",DRAFT_KEY="raccordements_draft_v3";
 var dashTech=get(DASH_KEY,{goal:400,theme:"dark"});
 if(!dashTech || typeof dashTech!=="object")dashTech={goal:400,theme:"dark"};
@@ -1028,7 +1133,8 @@ function renderChart(){
     h+='<button type="button" class="bar-col'+(x.d===chartSel?" sel":"")+'" data-d="'+x.d+'"><span class="bar-val">'+compact(x.v)+'</span><span class="bar-track"><span class="bar" style="height:'+Math.max(4,Math.round(x.v/max*76))+'px"></span></span><span class="bar-day">'+JOURS[dt.getDay()]+'<br>'+dt.getDate()+'</span></button>'});
   $("dashChart").innerHTML=h;
   var s=chartDays.filter(function(x){return x.d===chartSel})[0];
-  $("dashChartCap").innerHTML='<span>'+dayLong(s.d)+'</span><b>'+fe(s.v)+'</b><span>'+(s.n?plural(s.n,"intervention","interventions"):"aucune intervention")+'</span>'}
+  if(s){$("dashChartCap").innerHTML='<span>'+dayLong(s.d)+'</span><b>'+fe(s.v)+'</b><span>'+(s.n?plural(s.n,"intervention","interventions"):"aucune intervention")+'</span>'}
+}
 $("dashChart").addEventListener("click",function(ev){var b=ev.target.closest(".bar-col");if(!b)return;chartSel=b.dataset.d;renderChart()});
 function renderDashboard(){
   var all=dashList(),todayIso=iso(new Date()),goal=400,byDay={},ymNow=todayIso.slice(0,7);
@@ -1041,6 +1147,13 @@ function renderDashboard(){
   var month=all.filter(function(e){return e.date.slice(0,7)===ymNow}),succ=month.filter(function(e){return e.statut==="Réussite"}).length,rate=month.length?Math.round(succ/month.length*100):0,fl=dashFuelList();
   $("dashMonthAmount").textContent=fe(sum(month));$("dashMonthSub").textContent=plural(month.length,"intervention","interventions");
   $("dashFuelAmount").textContent=fe(sum(fl));$("dashMarginAmount").textContent=fe(sum(month)-sum(fl));$("dashFuelSub").textContent=fl.length?plural(fl.length,"plein","pleins"):"Aucun plein";
+
+  // Calcul Marge personnelle estimée : (CA Binôme / 2) + CA Solo - Carburant personnel du mois
+  var binomeCA = sum(month.filter(function(e){return e.solo==="Binôme"}));
+  var soloCA = sum(month.filter(function(e){return e.solo!=="Binôme"}));
+  var personalMargin = (binomeCA / 2) + soloCA - sum(fl);
+  $("dashPersonalMarginAmount").textContent = fe(personalMargin);
+
   $("dashRate").textContent=rate+"%";$("dashRateBar").style.width=rate+"%";$("dashRateSub").textContent=succ+" sur "+month.length+(succ>1?" réussies":" réussie");
   chartDays=[];for(var i=6;i>=0;i--){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-i);var k=iso(d),l=byDay[k]||[];chartDays.push({d:k,v:sum(l),n:l.length})}
   renderChart();
@@ -1048,10 +1161,10 @@ function renderDashboard(){
   var recent=all.slice().reverse().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0}).slice(0,5),h="";
   if(!recent.length)h='<div class="empty">Aucune intervention pour le moment.</div>';
   recent.forEach(function(e){var dl=e.date===todayIso?"Aujourd'hui":e.date===yIso?"Hier":fr(e.date).slice(0,5);
-    h+='<div class="act"><span class="act-ico'+(e.statut==="Échec"?" fail":"")+'">'+(e.statut==="Échec"?ICO_KO:ICO_OK)+'</span><div class="act-main"><b>'+esc(e.typo)+'<i>'+esc(e.num)+'</i></b><div class="act-meta"><span>'+dl+'</span><em class="chip '+(e.op==="Orange"?"o":"s")+'">'+esc(e.op)+'</em>'+(e.solo==="Binôme"?'<em class="chip">Binôme</em>':'')+'</div></div><div class="act-amt">'+fe(e.montant)+'</div></div>'});
+    h+='<div class="act"><span class="act-ico'+(e.statut==="Échec"?" fail":"")+'">'+(e.statut==="Échec"?ICO_KO:ICO_OK)+'</span><div class="act-main"><b>'+esc(e.typo||"")+'<i>'+esc(e.num||"")+'</i></b><div class="act-meta"><span>'+dl+'</span><em class="chip '+(e.op==="Orange"?"o":"s")+'">'+esc(e.op||"")+'</em>'+(e.solo==="Binôme"?'<em class="chip">Binôme</em>':'')+'</div></div><div class="act-amt">'+fe(e.montant)+'</div></div>'});
   $("dashRecent").innerHTML=h;
   $("dashSmartNote").textContent=today.length?plural(today.length,"intervention","interventions")+" aujourd'hui, dont "+okToday+(okToday>1?" réussies":" réussie")+". "+(todayCA>=goal?"L'objectif de "+fe(goal)+" est atteint.":"Il reste "+fe(goal-todayCA)+" pour atteindre l'objectif."):"Aucune intervention aujourd'hui. L'objectif du jour est de "+fe(goal)+".";
-  var hr=new Date().getHours();$("dashGreeting").textContent=hr<6?"Bonne nuit":hr<12?"Bonjour":hr<18?"Bon après-midi":"Bonsoir";$("dashHello").textContent=tech;
+  var hr=new Date().getHours();$("dashGreeting").textContent=hr<6?"Bonne nuit":hr<12?"Bonjour":hr<18?"Bon après-midi":"Bonsoir";$("dashHello").textContent=tech||"Technicien";
 }
 
 [].forEach.call(document.querySelectorAll("[data-quick-view]"),function(b){b.addEventListener("click",function(){var v=b.dataset.quickView;document.querySelector('.tabbar button[data-view="'+v+'"]').click()})});
@@ -1085,24 +1198,20 @@ $("backupBtn").addEventListener("click",function(){var payload={app:"FIBRE OPS",
 $("clearDraftBtn").addEventListener("click",function(){localStorage.removeItem(DRAFT_KEY);toast("Brouillon supprimé")});
 applyTheme();
 
-// Draft autosave for the intervention form (local-only)
+// Draft autosave
 function saveDraft(){var d={date:$('f-date').value,num:$('f-num').value,addr:$('f-addr').value,comment:$('f-comment').value,typo:$('f-typo').value,op:form.op,statut:form.statut,solo:form.solo,techSolo:$('f-tech-solo').value};set(DRAFT_KEY,d)}
-function restoreDraft(){var d=get(DRAFT_KEY,null);if(!d||(!d.num&&!d.addr&&!d.comment&&!d.typo))return;try{$('f-date').value=today;$('f-num').value=d.num||'';$('f-addr').value=d.addr||'';$('f-comment').value=d.comment||'';form.op=d.op||'Orange';form.statut=d.statut||'Réussite';form.solo=d.solo||'Solo';setSeg('f-op',form.op);setSeg('f-statut',form.statut);setSeg('f-solo',form.solo);$('wrap-tech-solo').style.display=form.solo==='Solo'?'block':'none';$('f-tech-solo').value=d.techSolo||$('f-tech-solo').value;fillTypo($('f-typo'),form.op,d.typo||'');form.typo=$('f-typo').value;preview();daily();toast('📝 Brouillon restauré');}catch(e){}}
+function restoreDraft(){var d=get(DRAFT_KEY,null);if(!d||(!d.num&&!d.addr&&!d.comment&&!d.typo))return;try{$('f-date').value=today;$('f-num').value=d.num||'';$('f-addr').value=d.addr||'';$('f-comment').value=d.comment||'';form.op=d.op||'Orange';form.statut=d.statut||'Réussite';form.solo=d.solo||'Binôme';setSeg('f-op',form.op);setSeg('f-statut',form.statut);setSeg('f-solo',form.solo);$('wrap-tech-solo').style.display=form.solo==='Solo'?'block':'none';$('f-tech-solo').value=d.techSolo||$('f-tech-solo').value;fillTypo($('f-typo'),form.op,d.typo||'');form.typo=$('f-typo').value;updateApieVisibility();daily();toast('📝 Brouillon restauré');}catch(e){}}
 ['f-date','f-num','f-addr','f-comment','f-typo','f-tech-solo'].forEach(function(id){$(id).addEventListener('input',saveDraft);$(id).addEventListener('change',saveDraft)});
 restoreDraft();
 
-// On successful save, clear draft
-var __oldToast=toast;
 var clearDraftObserver=function(){if(!$('f-num').value&&!$('f-addr').value&&!$('f-comment').value&&!$('f-typo').value){localStorage.removeItem(DRAFT_KEY)}};
 setInterval(clearDraftObserver,1500);
 
-// Clock + keyboard shortcuts
+// Clock
 function updateClock(){var d=new Date(),t=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});$('topClock').textContent=t}
 updateClock();setInterval(updateClock,30000);
-document.addEventListener('keydown',function(ev){if(ev.target&&/input|textarea|select/i.test(ev.target.tagName))return;var k=ev.key.toLowerCase();if(k==='d')document.querySelector('.tabbar button[data-view="dashboard"]').click();if(k==='n')document.querySelector('.tabbar button[data-view="saisie"]').click();if(k==='f')document.querySelector('.tabbar button[data-view="carburant"]').click();if(k==='h')document.querySelector('.tabbar button[data-view="historique"]').click()});
 
-// Sync status visual polish without changing the existing sync logic
-var __status=status;status=function(){__status();var off=!navigator.onLine,badge=$('syncPill'),dot=$('syncDot');if(!badge||!dot)return;dot.style.background=off?'var(--danger)':outbox.length?'var(--orange)':'var(--success)';dot.style.boxShadow=off?'0 0 10px rgba(255,107,107,.45)':outbox.length?'0 0 10px rgba(255,159,67,.42)':'0 0 10px rgba(57,217,138,.55)';badge.title=off?'Hors-ligne'+(outbox.length?' — données en attente':''):outbox.length?outbox.length+' opération(s) en attente de synchro':'Synchronisé avec Sheets'};
+var __status=status;status=function(){__status();var off=!navigator.onLine,badge=$('syncPill'),dot=$('syncDot');if(!badge||!dot)return;dot.style.background=off?'var(--danger)':outbox.length?'var(--orange)':'var(--success)';dot.style.boxShadow=off?'0 0 10px rgba(255,107,107,.45)':outbox.length?'0 0 10px rgba(255,159,67,.42)':'0 0 10px rgba(57,217,138,.55)';badge.title=off?'Hors-ligne'+(outbox.length?' — données en attente':''):outbox.length?outbox.length+' opération(s) en attente de synchro':'Synchronisé with Sheets'};
 applyTheme();renderAll();status();flush();pull(tech);
 })();
 </script>
